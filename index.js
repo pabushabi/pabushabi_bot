@@ -81,9 +81,3 @@ bot.on('message', (msg) => {
     };
     bot.sendMessage(chatId, 'Выберите команду: ', opts);
 });
-
-/*bot.on('message', (msg, match) => {
-    const chatId = msg.chat.id;
-    const resp = msg.text;
-    bot.sendMessage(chatId, 'Вы отправили: ' + resp + '\nПохоже, не могу распознать это. Повторите попытку!');
-});*/
