@@ -9,6 +9,18 @@ let userList = {
 };
 let userListCache = "";
 
+let stickCounter = 8;
+let stikcersList = [
+    'BQADAgADyQADEag0BYauZXVnHFqOAg',
+    'CAADAgADdgADztjoCw62KGT2T06jAg',
+    'CAADAgADQgAD_RjLCK7ikMMLet7AAg',
+    'CAADAgADSAAD_RjLCK24L5SBxlcMAg',
+    'CAADAgADNwEAAulVBRhg2pmhgKJyOAI',
+    'CAADAgAD7AADztjoC6zC34k5K8xHAg',
+    'CAADAgADZAADaPTBBX_UoREleZCHAg',
+    'CAADAgADhAADaPTBBZa3doe7nMSKAg'
+];
+
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     const resp = 'Привет, я бот';
@@ -53,19 +65,30 @@ bot.onText(/привет/, (msg) => {
     bot.sendMessage(chatId, 'Привет)');
 });
 
-bot.onText(/\/song/, (msg) => {
+/*bot.onText(/\/song/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendAudio(chatId, 'src/songs/song' + Math.round(Math.random() * 9) + '.mp3');
-});
+});*/
 
-bot.onText(/\/pic/, (msg) => {
+/*bot.onText(/\/pic/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendPhoto(chatId, 'src/pics/pic' + Math.round(Math.random() * 9) + '.jpg');
-});
+});*/
 
 bot.onText(/\/num/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, Math.round(Math.random() * 10));
+    bot.sendMessage(chatId, "😁");
+});
+
+bot.onText(/\/sticker/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendSticker(chatId, stikcersList[Math.round(Math.random() * stickCounter)]);
+});
+
+bot.on('sticker', (msg) => {
+    stikcersList += "\'" + msg.sticker.file_id + "\'";
+    stickCounter++;
 });
 
 bot.on('message', (msg) => {
@@ -75,9 +98,9 @@ bot.on('message', (msg) => {
         //reply_to_message_id: msg.message_id,
         reply_markup: JSON.stringify({
             keyboard: [
-                ['/pic'], ['/num'], ['/song'], ['/help']
+                /*['/pic'],*/ ['3⃣/num'],/* ['/song'], */ ['🌄/sticker'] ,['ℹ/help']
             ]
         })
     };
-    bot.sendMessage(chatId, 'Выберите команду: ', opts);
+    bot.sendMessage(chatId, 'Результат: ', opts);
 });
