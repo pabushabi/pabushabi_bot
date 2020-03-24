@@ -3,104 +3,103 @@
 const TelegramBot = require('node-telegram-bot-api');
 const TOKEN = '541456695:AAGBesYvLTFskdmppjO0g6zYeMj7FZwNHJI';
 const bot = new TelegramBot(TOKEN, {polling: true});
+const axios = require('axios');
 
-let userList = {
-    "id0": "admin"
+
+const opts = {
+    reply_markup: JSON.stringify({
+        keyboard: [
+            // ['🌁/pic', '3⃣/num'], ['ℹ/help']
+            []
+        ],
+        // inline_keyboard: [
+        //     [{text: "like", callback_data: "1"}], [{text: "dislike", callback_data: "-1"}]
+        // ]
+    })
 };
-let userListCache = "";
 
-let stickCounter = 8;
-let stikcersList = [
-    'BQADAgADyQADEag0BYauZXVnHFqOAg',
-    'CAADAgADdgADztjoCw62KGT2T06jAg',
-    'CAADAgADQgAD_RjLCK7ikMMLet7AAg',
-    'CAADAgADSAAD_RjLCK24L5SBxlcMAg',
-    'CAADAgADNwEAAulVBRhg2pmhgKJyOAI',
-    'CAADAgAD7AADztjoC6zC34k5K8xHAg',
-    'CAADAgADZAADaPTBBX_UoREleZCHAg',
-    'CAADAgADhAADaPTBBZa3doe7nMSKAg'
-];
-
-bot.onText(/\/start/, (msg) => {
+bot.onText(/\/start/, msg => {
     const chatId = msg.chat.id;
     const resp = 'Привет, я бот';
-    bot.sendMessage(chatId, resp);
+    bot.sendMessage(chatId, resp, opts);
 });
 
-bot.onText(/\/echo (.+)/, (msg, match) => {
+bot.onText(/\/help/, msg => {
     const chatId = msg.chat.id;
-    const resp = match[1];
-    bot.sendMessage(chatId, resp);
+    const resp = `Это просто бот. Сейчас он почти ничего не умеет, но он быстро учится)
+Отправьте команду "текст имя исполнителя - название песни" и бот отправит вам текст песни`;
+    bot.sendMessage(chatId, resp, opts);
 });
 
-bot.onText(/\/help/, (msg) => {
-    const chatId = msg.chat.id;
-    const resp = 'Это просто бот. Сейчас он почти ничего не умеет, но он быстро учится)';
-    bot.sendMessage(chatId, resp);
-});
-
-bot.onText(/\/admin (.+)/, (msg, match) => {
-    const chatId = msg.chat.id;
-    if (match[1] === 'admin') {
-        bot.sendMessage(chatId, 'admin mode');
-        const chatCode = "id" + chatId;
-        if (userList[chatCode] === undefined) {
-            userList[chatCode] = msg.from.username;
-        }
-        for (let key in userList) {
-            userListCache += userList[key] + " \n";
-        }
-        bot.sendMessage(chatId, 'List of bot`s users: \n' + userListCache);
-    }
-    else bot.sendMessage(chatId, 'access denied');
-});
-
-bot.onText(/Привет/, (msg) => {
+bot.onText(/привет/gi, msg => {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, 'Привет)');
 });
 
-bot.onText(/привет/, (msg) => {
+bot.onText(/текст (.+)/gi, (msg, match) => {
     const chatId = msg.chat.id;
-    bot.sendMessage(chatId, 'Привет)');
+    console.log(match[1]);
+    let artist = match[1].slice(0, match[1].indexOf('-') - 1);
+    console.log(artist);
+    let song = match[1].slice(match[1].indexOf('-') + 1);
+    console.log(song);
+    axios.get(`https://api.lyrics.ovh/v1/${artist}/${song}`)
+        .then(res => {
+            console.log(res.data.lyrics);
+            bot.sendMessage(chatId, res.data.lyrics)
+        })
+        .catch(err => {
+            console.log('---' + err);
+            bot.sendMessage(chatId, 'Something get wrong, please try again later')
+        });
 });
 
-/*bot.onText(/\/song/, (msg) => {
+bot.onText(/\/pic/, msg => {
     const chatId = msg.chat.id;
-    bot.sendAudio(chatId, 'src/songs/song' + Math.round(Math.random() * 9) + '.mp3');
-});*/
-
-/*bot.onText(/\/pic/, (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendPhoto(chatId, 'src/pics/pic' + Math.round(Math.random() * 9) + '.jpg');
-});*/
-
-bot.onText(/\/num/, (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendMessage(chatId, Math.round(Math.random() * 10));
-    bot.sendMessage(chatId, "😁");
+    axios.get('http://shibe.online/api/shibes?count=[1-100]')
+        .then(data => {
+            console.log(data.data[0]);
+            bot.sendPhoto(chatId, data.data[0], {caption: "Doge!"}, opts)
+        })
+        .catch(err => {
+            console.log(err);
+            bot.sendMessage(chatId, 'Something get wrong, please try later')
+        })
 });
 
-bot.onText(/\/sticker/, (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendSticker(chatId, stikcersList[Math.round(Math.random() * stickCounter)]);
-});
+// bot.onText(/кино/gi, msg => {
+//     const chatId = msg.chat.id;
+//     axios({
+//         "method": "GET",
+//         "url": "https://imdb8.p.rapidapi.com/title/find",
+//         "headers": {
+//             "content-type": "application/octet-stream",
+//             "x-rapidapi-host": "imdb8.p.rapidapi.com",
+//             "x-rapidapi-key": "SIGN-UP-FOR-KEY"
+//         }, "params": {
+//             "q": "game of thr"
+//         }
+//     })
+//         .then((response) => {
+//             console.log(response)
+//         })
+//         .catch((error) => {
+//             console.log(error)
+//         })
+// });
 
-bot.on('sticker', (msg) => {
-    stikcersList += "\'" + msg.sticker.file_id + "\'";
-    stickCounter++;
+bot.on("callback_query", msg => {
+    console.log(msg.data);
+    console.log(msg);
 });
 
 bot.on('message', (msg) => {
     const chatId = msg.chat.id;
     //bot.sendMessage(chatId, JSON.stringify(msg));
-    const opts = {
-        //reply_to_message_id: msg.message_id,
-        reply_markup: JSON.stringify({
-            keyboard: [
-                /*['/pic'],*/ ['3⃣/num'],/* ['/song'], */ ['🌄/sticker'] ,['ℹ/help']
-            ]
-        })
-    };
-    bot.sendMessage(chatId, 'Результат: ', opts);
+    console.log(`${chatId}:${msg.from.username} => ${msg.text}`);
+    // console.log(msg);
+
+    // bot.(chatId,"", opts);
 });
+
+console.log(`working...`);

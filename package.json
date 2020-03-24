@@ -9,6 +9,8 @@
   "author": "pabushabi",
   "license": "MIT",
   "dependencies": {
-    "node-telegram-bot-api": "^0.30.0"
+    "telegraf": "^3.36.0",
+    "axios": "^0.19.2",
+    "node-telegram-bot-api": "^0.40.0"
   }
 }
