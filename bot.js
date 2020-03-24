@@ -62,15 +62,6 @@ bot.on('message', ctx => {
     console.log(ctx.from.username + ' => ' + ctx.message.text);
 });
 
-bot.on('inline_query', (ctx) => {
-    const result = [];
-    // Explicit usage
-    ctx.telegram.answerInlineQuery(ctx.inlineQuery.id, result);
-
-    // Using context shortcut
-    ctx.answerInlineQuery(result)
-});
-
 bot.launch()
     .then(() => {
         console.log('working...');
