@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="08f4bca0-333b-42e4-95ec-79dfe6bbe98a" name="Default" comment="Removed useless function">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="08f4bca0-333b-42e4-95ec-79dfe6bbe98a" name="Default" comment="Removed useless function" />
     <list id="3d408a54-3b52-42c7-8326-94580a484aff" name="Revert &quot;Added resources&quot; This reverts commit 6c1c3b0" comment="Revert &quot;Added resources&quot;&#10;&#10;This reverts commit 6c1c3b0" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +113,7 @@
       <workItem from="1581565456566" duration="14980000" />
       <workItem from="1581650912869" duration="7236000" />
       <workItem from="1581833905586" duration="14186000" />
-      <workItem from="1584673329734" duration="6277000" />
+      <workItem from="1584673329734" duration="6598000" />
     </task>
     <task id="LOCAL-00001" summary="First commit">
       <created>1521701825789</created>
